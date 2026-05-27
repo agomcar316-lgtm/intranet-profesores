@@ -8,28 +8,6 @@
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <style>
-    #bloqueo {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #f4f6f8; z-index: 99999; display: flex;
-      flex-direction: column; align-items: center; justify-content: center;
-      font-family: sans-serif;
-    }
-    .caja-login {
-      background: white; padding: 40px; border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 320px;
-    }
-    input {
-      width: 100%; padding: 10px; margin: 10px 0;
-      border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
-    }
-    button {
-      background: #0070f3; color: white; border: none; padding: 10px 20px;
-      border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px;
-    }
-    button:hover { background: #0051a8; }
-    .error-msg { color: red; margin-top: 15px; font-size: 14px; display: none; }
-  </style>
 </head>
 <body>
 
@@ -104,98 +82,91 @@
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 
 <style>
-  /* Fondo completamente blanco para el contenido central */
-  body, .content, article {
-    background-color: #ffffff !important;
+<style>
+  /* 1. CONFIGURACIÓN DE COLORES GENERALES */
+  /* Fondo de toda la página en Azul Clarito */
+  body, section.content, article {
+    background-color: #EBF3FC !important; 
   }
-
-  /* Menú lateral integrado en azul claro suave */
+  
+  /* Columna del menú lateral en Blanco */
   .sidebar {
-    background-color: #f0f4f8 !important;
-    border-right: 1px solid #e2e8f0;
+    background-color: #ffffff !important;
+    border-right: 1px solid #cbd5e1;
   }
+  
+  /* Enlaces del menú lateral */
   .sidebar ul li a {
-    color: #2c3e50 !important;
+    color: #334155 !important;
     font-size: 14px;
-    padding: 10px 15px;
   }
   .sidebar ul li.active > a, 
   .sidebar ul li a:hover {
-    color: #1e3a8a !important; 
+    color: #4A90E2 !important; 
     font-weight: bold;
-    background-color: #e2e8f0;
-    border-left: 4px solid #4A90E2;
+    background-color: #f1f5f9;
   }
 
-  /* DISEÑO DE CABECERA COMPACTO ESTILO CORTE "PROFESORADO" */
-  .banner-profesorado {
-    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)), url('https://raw.githubusercontent.com/agomcar316-lgtm/intranet-profesores/main/logo.png'); 
-    /* Nota: Puedes cambiar la url de arriba por una foto de la fachada si la subes a GitHub */
-    background-size: cover;
-    background-position: center;
-    height: 140px;
+  /* 2. DISEÑO MÓVIL (Botón para ocultar/mostrar menú) */
+  .sidebar-toggle {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 4px;
+    padding: 10px !important;
+    bottom: auto !important;
+    top: 10px !important;
+  }
+
+  /* 3. PANTALLA DE BLOQUEO (Login) */
+  /* Fondo completo en Azul Marino */
+  #bloqueo {
+    background-color: #0F172A !important; 
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
-    box-shadow: inset 0 0 0 1000px rgba(74, 144, 226, 0.15); /* Tinte azul sutil */
   }
-  .banner-profesorado h1 {
-    font-family: 'Times New Roman', Times, serif;
-    color: #000000 !important;
-    font-size: 2.2rem !important;
-    letter-spacing: 3px;
-    font-weight: bold;
-    border: 3px solid #000000;
-    padding: 12px 60px;
-    background-color: rgba(255, 255, 255, 0.85);
-    margin: 0 !important;
+  
+  /* Cuadro del formulario en Blanco */
+  #login-box {
+    background-color: #ffffff !important;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  /* Inputs y botón del login */
+  #login-box h2 { color: #0F172A !important; font-family: sans-serif; }
+  #login-box input[type="text"], #login-box input[type="password"] {
+    width: 100%; padding: 12px; margin: 10px 0;
+    border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;
+  }
+  #login-box input[type="button"] {
+    width: 100%; padding: 12px; background-color: #4A90E2 !important;
+    color: white !important; border: none; border-radius: 6px;
+    font-weight: bold; cursor: pointer; margin-top: 10px;
   }
 
-  /* CUADRÍCULA DE BOTONES CORPORATIVOS */
-  .grid-botones {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-  }
-  .boton-intranet {
-    display: inline-block;
-    width: 180px;
-    margin: 10px;
-    padding: 20px 10px;
-    background-color: #ffffff !important;
-    border: 2px solid #4A90E2 !important;
-    color: #1e3a8a !important;
+  /* 4. ADAPTACIÓN DEL CALENDARIO NO-GOOGLE EN MÓVILES */
+  .contenedor-calendario {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 75%; /* Relación de aspecto para que no se corte en el móvil */
+    background: white;
     border-radius: 8px;
-    text-decoration: none !important;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.2s ease;
-    vertical-align: top;
   }
-  .boton-intranet:hover {
-    background-color: #4A90E2 !important;
-    color: white !important;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(74, 144, 226, 0.3);
+  .contenedor-calendario iframe {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border: 0;
   }
-  .boton-intranet .icono {
-    display: block;
-    font-size: 28px;
-    margin-bottom: 8px;
-  }
-  .boton-intranet .texto {
-    font-weight: bold;
-    font-size: 14px;
-  }
-  /* Ajuste para el calendario de la página de inicio */
-.contenedor-calendario {
-  max-width: 90%;
-  margin: 20px auto;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
+</style>
 </style>
 
 </body>
