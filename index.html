@@ -104,38 +104,88 @@
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 
 <style>
-  /* Color del fondo general del menú lateral */
+  /* Fondo completamente blanco para el contenido central */
+  body, .content, article {
+    background-color: #ffffff !important;
+  }
+
+  /* Menú lateral integrado en azul claro suave */
   .sidebar {
-    background-color: #f4f7f6 !important;
+    background-color: #f0f4f8 !important;
+    border-right: 1px solid #e2e8f0;
   }
-
-  /* Color de los enlaces del menú en estado normal */
   .sidebar ul li a {
-    color: #333333 !important;
-    font-size: 15px;
+    color: #2c3e50 !important;
+    font-size: 14px;
+    padding: 10px 15px;
   }
-
-  /* Color del enlace cuando pasas el ratón o está seleccionado (Azul Clarito) */
   .sidebar ul li.active > a, 
   .sidebar ul li a:hover {
-    color: #4A90E2 !important; 
+    color: #1e3a8a !important; 
     font-weight: bold;
-    border-left: 4px solid #4A90E2; /* Pone una bonita línea guía azul al lado */
-    padding-left: 10px;
+    background-color: #e2e8f0;
+    border-left: 4px solid #4A90E2;
   }
 
-  /* Si mantienes la caja de login o botones personalizados, los pintamos de azul */
-  button, .btn-primary, #login-box input[type="button"] {
+  /* DISEÑO DE CABECERA COMPACTO ESTILO CORTE "PROFESORADO" */
+  .banner-profesorado {
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)), url('https://raw.githubusercontent.com/agomcar316-lgtm/intranet-profesores/main/logo.png'); 
+    /* Nota: Puedes cambiar la url de arriba por una foto de la fachada si la subes a GitHub */
+    background-size: cover;
+    background-position: center;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1000px rgba(74, 144, 226, 0.15); /* Tinte azul sutil */
+  }
+  .banner-profesorado h1 {
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000 !important;
+    font-size: 2.2rem !important;
+    letter-spacing: 3px;
+    font-weight: bold;
+    border: 3px solid #000000;
+    padding: 12px 60px;
+    background-color: rgba(255, 255, 255, 0.85);
+    margin: 0 !important;
+  }
+
+  /* CUADRÍCULA DE BOTONES CORPORATIVOS */
+  .grid-botones {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .boton-intranet {
+    display: inline-block;
+    width: 180px;
+    margin: 10px;
+    padding: 20px 10px;
+    background-color: #ffffff !important;
+    border: 2px solid #4A90E2 !important;
+    color: #1e3a8a !important;
+    border-radius: 8px;
+    text-decoration: none !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    vertical-align: top;
+  }
+  .boton-intranet:hover {
     background-color: #4A90E2 !important;
-    border: none !important;
     color: white !important;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(74, 144, 226, 0.3);
   }
-
-  button:hover {
-    background-color: #357ABD !important; /* Un azul un pelín más oscuro al pasar el ratón */
+  .boton-intranet .icono {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .boton-intranet .texto {
+    font-weight: bold;
+    font-size: 14px;
   }
 </style>
 
