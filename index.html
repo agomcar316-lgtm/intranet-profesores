@@ -6,10 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
   
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  
   <style>
-    /* Estilos para la pantalla de bloqueo */
+    /* Estilos de la pantalla de bloqueo */
     #bloqueo {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #f4f6f8; z-index: 99999; display: flex;
@@ -18,8 +16,17 @@
     }
     .caja-login {
       background: white; padding: 40px; border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 320px;
     }
+    input[type="password"] {
+      width: 100%; padding: 10px; margin: 15px 0;
+      border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
+    }
+    button {
+      background: #42b983; color: white; border: none; padding: 10px 20px;
+      border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold;
+    }
+    button:hover { background: #3aa373; }
     .error-msg { color: red; margin-top: 15px; font-size: 14px; display: none; }
   </style>
 </head>
@@ -27,60 +34,40 @@
 
   <div id="bloqueo">
     <div class="caja-login">
-      <h2>Intranet IES</h2>
-      <p>Acceso exclusivo para el profesorado del centro.</p>
-      <p style="color: #666; font-size: 14px;">Identifícate con tu cuenta corporativa de <strong>@educaand.es</strong></p>
+      <h2>Intranet Profesorado</h2>
+      <p style="color: #666; font-size: 14px;">Introduce la contraseña del centro para acceder.</p>
       
-      <div id="buttonDiv" style="display: inline-block; margin-top: 20px;"></div>
+      <input type="password" id="passInput" placeholder="Contraseña de acceso" onkeydown="if(event.key === 'Enter') verificar()">
+      <button onclick="verificar()">Entrar</button>
       
-      <div id="error" class="error-msg">Lo siento, este acceso está restringido solo a correos @educaand.es</div>
+      <div id="error" class="error-msg">Contraseña incorrecta. Inténtalo de nuevo.</div>
     </div>
   </div>
 
   <div id="app">Cargando intranet...</div>
 
   <script>
-    // 1. FUNCIÓN QUE COMPRUEBA EL CORREO AL LOGUEARSE
-    function handleCredentialResponse(response) {
-      // Decodificamos los datos que nos envía Google de forma segura
-      const base64Url = response.credential.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
+    // CAMBIA AQUÍ LA CONTRASEÑA QUE LE DARÁS A LOS PROFESORES
+    const CLAVE_CORRECTA = "Educaand2026!"; 
 
-      const usuario = JSON.parse(jsonPayload);
-      
-      // COMPROBACIÓN CRÍTICA: ¿Es de educaand?
-      if (usuario.email.endsWith('@educaand.es')) {
-        // Guardamos en la memoria del navegador que ya está logueado
-        sessionStorage.setItem('docente_autenticado', 'si');
-        // Quitamos la pantalla de bloqueo
+    function verificar() {
+      const input = document.getElementById('passInput').value;
+      if (input === CLAVE_CORRECTA) {
+        sessionStorage.setItem('docente_validado', 'si');
         document.getElementById('bloqueo').style.display = 'none';
       } else {
-        // Si es una cuenta de gmail normal, mostramos error
         document.getElementById('error').style.display = 'block';
       }
     }
 
-    // 2. COMPROBACIÓN AL ENTRAR A LA WEB (Por si ya se había logueado antes)
+    // Comprobar si ya la puso antes en esta sesión
     window.onload = function () {
-      if (sessionStorage.getItem('docente_autenticado') === 'si') {
+      if (sessionStorage.getItem('docente_validado') === 'si') {
         document.getElementById('bloqueo').style.display = 'none';
-      } else {
-        // Inicializamos el botón de Google
-        google.accounts.id.initialize({
-          client_id: "978187843075-v6vj9gml9jbb37vun8lh66on377488cl.apps.googleusercontent.com", // ID público genérico de Google Auth
-          callback: handleCredentialResponse
-        });
-        google.accounts.id.renderButton(
-          document.getElementById("buttonDiv"),
-          { theme: "outline", size: "large", text: "signin_with" }
-        );
       }
     }
 
-    // 3. CONFIGURACIÓN DE LA INTRANET (DOCSIFY)
+    // Configuración de Docsify
     window.$docsify = {
       name: 'Intranet Docente',
       homepage: 'README.md',
