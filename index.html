@@ -12,17 +12,16 @@
 <body>
 
   <div id="bloqueo">
-    <div class="caja-login">
-      <h2>Intranet IES</h2>
-      <p style="color: #666; font-size: 14px;">Inicia sesión con tu usuario de Educaand</p>
-      
-      <input type="text" id="userInput" placeholder="Ej: acervel346">
-      <input type="password" id="passInput" placeholder="Contraseña">
-      <button onclick="iniciarSesion()">Acceder</button>
-      
-      <div id="error" class="error-msg">Usuario o contraseña incorrectos, o no estás en la lista autorizada.</div>
-    </div>
+  <div class="login-box-container">
+    <img src="logo.png" class="login-logo" alt="IES Drago">
+    <h2>Intranet IES Drago</h2>
+    <p>Inicia sesión con tu usuario de Educaand</p>
+    <input type="text" id="userInput" placeholder="Usuario">
+    <input type="password" id="passInput" placeholder="Contraseña">
+    <button onclick="iniciarSesion()">Acceder</button>
+    <div id="error" style="color:red; display:none; margin-top:10px;"></div>
   </div>
+</div>
 
   <div id="app">Cargando intranet...</div>
 
@@ -60,115 +59,150 @@
       }
     }
 
-    // Comprobar si el profesor ya estaba dentro
-    window.onload = function () {
-      if (sessionStorage.getItem('sesion_docente') === 'activa') {
-        document.getElementById('bloqueo').style.display = 'none';
-      }
-    }
+    <script>
+  window.$docsify = {
+    name: 'IES Drago',
+    logo: 'logo.png', 
+    themeColor: '#4A90E2', 
+    loadSidebar: true,
+    auto2top: true
+  };
+</script>
 
-    // Configuración de Docsify
-    window.$docsify = {
-  name: 'IES Drago',
-  // Cambia la ruta por la de tu logo real cuando lo subas a GitHub
-  logo: 'logo.png', 
-  themeColor: '#4A90E2', // El código hexadecimal para un azul clarito muy elegante
-  loadSidebar: true,
-  auto2top: true
-};
-  </script>
-  
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 
 <style>
-<style>
-  /* 1. CONFIGURACIÓN DE COLORES GENERALES */
-  /* Fondo de toda la página en Azul Clarito */
-  body, section.content, article {
-    background-color: #EBF3FC !important; 
+  /* 1. PANTALLA DE BLOQUEO (FONDO AZUL MARINO Y CUADRO FLOTANTE BLANCO) */
+  #bloqueo {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #0B192C !important; /* Azul Marino Oscuro */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
   }
-  
+
+  /* Cuadro flotante blanco centrado */
+  .login-box-container {
+    background-color: #ffffff !important;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Logo insertado dentro del cuadro de login */
+  .login-box-container img.login-logo {
+    max-width: 120px;
+    height: auto;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .login-box-container h2 {
+    color: #0B192C !important;
+    font-family: 'Segoe UI', sans-serif;
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+
+  .login-box-container p {
+    color: #64748b !important;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  /* Inputs estilizados */
+  .login-box-container input[type="text"],
+  .login-box-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .login-box-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4A90E2 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+  }
+
+  .login-box-container button:hover {
+    background-color: #357ABD !important;
+  }
+
+  /* 2. INTERIOR DE LA INTRANET (FONDO AZUL CLARITO Y COLUMNA BLANCA) */
+  /* Fondo general de la página en azul clarito */
+  body, .content, article {
+    background-color: #EBF3FC !important; /* Azul clarito de fondo */
+  }
+
   /* Columna del menú lateral en Blanco */
   .sidebar {
-    background-color: #ffffff !important;
+    background-color: #ffffff !important; 
     border-right: 1px solid #cbd5e1;
   }
-  
+
   /* Enlaces del menú lateral */
   .sidebar ul li a {
     color: #334155 !important;
     font-size: 14px;
   }
+
   .sidebar ul li.active > a, 
   .sidebar ul li a:hover {
     color: #4A90E2 !important; 
     font-weight: bold;
     background-color: #f1f5f9;
+    border-left: 4px solid #4A90E2;
   }
 
-  /* 2. DISEÑO MÓVIL (Botón para ocultar/mostrar menú) */
+  /* Subcarpetas / Submenús en cascada */
+  .sidebar ul li ul {
+    padding-left: 15px !important;
+  }
+
+  /* Botón para ocultar/mostrar menú (Docsify lo maneja solo, lo pintamos) */
   .sidebar-toggle {
-    background-color: rgba(255, 255, 255, 0.9) !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
     border-radius: 4px;
     padding: 10px !important;
-    bottom: auto !important;
-    top: 10px !important;
   }
 
-  /* 3. PANTALLA DE BLOQUEO (Login) */
-  /* Fondo completo en Azul Marino */
-  #bloqueo {
-    background-color: #0F172A !important; 
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  /* Cuadro del formulario en Blanco */
-  #login-box {
-    background-color: #ffffff !important;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-  }
-  
-  /* Inputs y botón del login */
-  #login-box h2 { color: #0F172A !important; font-family: sans-serif; }
-  #login-box input[type="text"], #login-box input[type="password"] {
-    width: 100%; padding: 12px; margin: 10px 0;
-    border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;
-  }
-  #login-box input[type="button"] {
-    width: 100%; padding: 12px; background-color: #4A90E2 !important;
-    color: white !important; border: none; border-radius: 6px;
-    font-weight: bold; cursor: pointer; margin-top: 10px;
-  }
-
-  /* 4. ADAPTACIÓN DEL CALENDARIO NO-GOOGLE EN MÓVILES */
-  .contenedor-calendario {
+  /* 3. RESPONSIVE: RESPONSIVIDAD PARA EL CALENDARIO NO-GOOGLE */
+  .contenedor-calendario-adaptable {
     position: relative;
-    width: 100%;
     overflow: hidden;
-    padding-top: 75%; /* Relación de aspecto para que no se corte en el móvil */
+    width: 100%;
+    padding-top: 75%; /* Relación de aspecto para que no se corte en móviles */
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   }
-  .contenedor-calendario iframe {
+
+  .contenedor-calendario-adaptable iframe {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    border: 0;
+    top: 0; left: 0; bottom: 0; right: 0;
+    width: 100%; height: 100%;
+    border: none;
   }
 </style>
-</style>
-
 </body>
 </html>
 </body>
