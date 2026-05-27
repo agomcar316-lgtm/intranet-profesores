@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
   
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
-    /* Estilos de la pantalla de bloqueo */
     #bloqueo {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #f4f6f8; z-index: 99999; display: flex;
@@ -18,15 +19,15 @@
       background: white; padding: 40px; border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 320px;
     }
-    input[type="password"] {
-      width: 100%; padding: 10px; margin: 15px 0;
+    input {
+      width: 100%; padding: 10px; margin: 10px 0;
       border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
     }
     button {
-      background: #42b983; color: white; border: none; padding: 10px 20px;
-      border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold;
+      background: #0070f3; color: white; border: none; padding: 10px 20px;
+      border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px;
     }
-    button:hover { background: #3aa373; }
+    button:hover { background: #0051a8; }
     .error-msg { color: red; margin-top: 15px; font-size: 14px; display: none; }
   </style>
 </head>
@@ -34,35 +35,56 @@
 
   <div id="bloqueo">
     <div class="caja-login">
-      <h2>Intranet Profesorado</h2>
-      <p style="color: #666; font-size: 14px;">Introduce la contraseña del centro para acceder.</p>
+      <h2>Intranet IES</h2>
+      <p style="color: #666; font-size: 14px;">Inicia sesión con tu usuario de Educaand</p>
       
-      <input type="password" id="passInput" placeholder="Contraseña de acceso" onkeydown="if(event.key === 'Enter') verificar()">
-      <button onclick="verificar()">Entrar</button>
+      <input type="text" id="userInput" placeholder="Ej: agomcar316">
+      <input type="password" id="passInput" placeholder="Contraseña">
+      <button onclick="iniciarSesion()">Acceder</button>
       
-      <div id="error" class="error-msg">Contraseña incorrecta. Inténtalo de nuevo.</div>
+      <div id="error" class="error-msg">Usuario o contraseña incorrectos, o no estás en la lista autorizada.</div>
     </div>
   </div>
 
   <div id="app">Cargando intranet...</div>
 
   <script>
-    // CAMBIA AQUÍ LA CONTRASEÑA QUE LE DARÁS A LOS PROFESORES
-    const CLAVE_CORRECTA = "Educaand2026!"; 
+    // --- PEGA AQUÍ TUS DATOS DE SUPABASE DEL PASO 1 ---
+    const SUPABASE_URL = "https://gvcouxiksexryqkknupv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_GO_oH1MciSTQNL8llaUpbA_mu29fjKR";
+    // --------------------------------------------------
 
-    function verificar() {
-      const input = document.getElementById('passInput').value;
-      if (input === CLAVE_CORRECTA) {
-        sessionStorage.setItem('docente_validado', 'si');
-        document.getElementById('bloqueo').style.display = 'none';
+    const supabase = SUPABASE.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function iniciarSesion() {
+      let usuario = document.getElementById('userInput').value.trim();
+      const contrasena = document.getElementById('passInput').value;
+      const errorDiv = document.getElementById('error');
+
+      // Si el profesor no escribe el correo completo, se lo añadimos nosotros automáticamente
+      if (!usuario.includes('@')) {
+        usuario = usuario + "@g.educaand.es"; 
+      }
+
+      // Intentamos loguear al usuario contra tu lista de Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: usuario,
+        password: contrasena,
+      });
+
+      if (error) {
+        errorDiv.textContent = "Acceso denegado: Usuario no válido o no autorizado.";
+        errorDiv.style.display = 'block';
       } else {
-        document.getElementById('error').style.display = 'block';
+        // Logueado con éxito
+        sessionStorage.setItem('sesion_docente', 'activa');
+        document.getElementById('bloqueo').style.display = 'none';
       }
     }
 
-    // Comprobar si ya la puso antes en esta sesión
+    // Comprobar si el profesor ya estaba dentro
     window.onload = function () {
-      if (sessionStorage.getItem('docente_validado') === 'si') {
+      if (sessionStorage.getItem('sesion_docente') === 'activa') {
         document.getElementById('bloqueo').style.display = 'none';
       }
     }
