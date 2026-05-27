@@ -27,14 +27,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // --- DATOS DE CONEXIÓN A SUPABASE (URL LIMPIA SIN AÑADIDOS) ---
-    const SUPABASE_URL = "https://ailzculxwbzckqobwlxa.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpbHpjdWx4d2J6Y2tvYndseGEiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0ODMxODEyNSwiZXhwIjoyMDYzODk0MTI1fQ.v_bC-x91K0H0fS7Nf3XpEdf1uC169L_L9_z3gXvW-9k"; 
+    // --- CONEXIÓN COMPROBADA A SUPABASE ---
+    const SUPABASE_URL = "https://gvcouxiksexryqkknupv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_GO_oH1MciSTQNL8llaUpbA_mu29fjKR"; 
     
-    // Inicialización del cliente
     const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // FUNCIÓN DE LOGUEO
     async function iniciarSesion() {
       let usuario = document.getElementById('userInput').value.trim();
       const contrasena = document.getElementById('passInput').value;
@@ -70,28 +68,27 @@
       }
     }
 
-    // Persistencia de la sesión al recargar
     window.onload = function() {
       if (sessionStorage.getItem('sesion_docente') === 'activa') {
         document.getElementById('bloqueo').style.display = 'none';
       }
     }
 
-    // CONFIGURACIÓN AJUSTADA PARA GITHUB PAGES (Ruta relativa)
+    // --- CONFIGURACIÓN DE DOCSIFY PARA GITHUB PAGES ---
     window.$docsify = {
       name: 'IES Drago',
       logo: 'logo.png',
       themeColor: '#4A90E2',
       loadSidebar: true,
       auto2top: true,
-      relativePath: true // ¡Clave para que encuentre el _sidebar.md en GitHub Pages!
+      // Forzamos a que busque el archivo con guion bajo de forma relativa
+      sidebarDisplayLevel: 1
     };
   </script>
 
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 
   <style>
-    /* Bloqueo: Fondo Azul Marino Oscuro */
     #bloqueo {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -101,8 +98,6 @@
       justify-content: center;
       z-index: 99999;
     }
-
-    /* Caja Flotante Blanca */
     .login-box-container {
       background-color: #ffffff !important;
       padding: 40px 35px;
@@ -113,27 +108,23 @@
       text-align: center;
       box-sizing: border-box;
     }
-
     .login-box-container .login-logo {
       max-width: 130px;
       height: auto;
       margin: 0 auto 20px auto;
       display: block;
     }
-
     .login-box-container h2 {
       color: #1E293B !important;
       margin-bottom: 8px;
       font-size: 22px;
       font-family: system-ui, sans-serif;
     }
-
     .login-box-container p {
       color: #64748B !important;
       font-size: 14px;
       margin-bottom: 25px;
     }
-
     .login-box-container input {
       width: 100%;
       padding: 12px;
@@ -144,7 +135,6 @@
       font-size: 14px;
       background-color: #F8FAFC;
     }
-
     .login-box-container button {
       width: 100%;
       padding: 13px;
@@ -156,27 +146,20 @@
       font-size: 15px;
       cursor: pointer;
     }
-
     .login-box-container button:hover {
       background-color: #2563EB !important;
     }
-
-    /* DISEÑO INTERIOR DE LA WEB: FONDO AZUL CLARITO */
     body, .content, article {
       background-color: #EBF3FC !important; 
     }
-
-    /* COLUMNA LATERAL EN BLANCO */
     .sidebar {
       background-color: #FFFFFF !important;
       border-right: 1px solid #E2E8F0;
     }
-
     .sidebar ul li a {
       color: #334155 !important;
       font-size: 14px;
     }
-
     .sidebar ul li.active > a, 
     .sidebar ul li a:hover {
       color: #4A90E2 !important;
@@ -184,12 +167,10 @@
       background-color: #F1F5F9;
       border-left: 4px solid #4A90E2;
     }
-
     .sidebar ul li ul {
       padding-left: 15px !important;
     }
-
-    .contenedor-calendario-adaptable {
+    .contenedor-calendario {
       position: relative;
       overflow: hidden;
       width: 100%;
@@ -197,7 +178,7 @@
       background: white;
       border-radius: 8px;
     }
-    .contenedor-calendario-adaptable iframe {
+    .contenedor-calendario iframe {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       border: none;
