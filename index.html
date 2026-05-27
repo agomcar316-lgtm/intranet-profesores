@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>IES Drago</title>
+  <title>Intranet IES Drago</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
 </head>
@@ -22,17 +22,20 @@
     </div>
   </div>
 
+  <div id="app">Cargando la intranet...</div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     // --- DATOS DE CONEXIÓN A SUPABASE ---
     const SUPABASE_URL = "https://ailzwulxwbzckqobwkxa.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_43E5b_XAdcJqG8PjEGfklQ_lDNFBiqN"; // Tu clave larga real
+    // Usamos tu clave pública real "anon public" para que la conexión responda
+    const SUPABASE_KEY = "sb_publishable_43E5b_XAdcJqG8PjEGfklQ_lDNFBiqN"; 
     
-    // Inicialización limpia reutilizando la librería global
+    // Inicialización del cliente
     const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // FUNCIÓN DE INICIO DE SESIÓN
+    // FUNCIÓN DE LOGUEO
     async function iniciarSesion() {
       let usuario = document.getElementById('userInput').value.trim();
       const contrasena = document.getElementById('passInput').value;
@@ -44,7 +47,6 @@
         return;
       }
 
-      // Añadimos el sufijo automáticamente si el profesor pone solo el usuario corto
       if (usuario.includes('@')) {
         usuario = usuario.split('@')[0];
       }
@@ -57,27 +59,26 @@
         });
 
         if (error) {
-          errorDiv.textContent = "Acceso denegado: Usuario o contraseña incorrectos.";
+          errorDiv.textContent = "Acceso denegado: Datos incorrectos.";
           errorDiv.style.display = 'block';
         } else {
-          // Éxito: Ocultamos el bloqueo y damos paso libre
           sessionStorage.setItem('sesion_docente', 'activa');
           document.getElementById('bloqueo').style.display = 'none';
         }
       } catch (err) {
-        errorDiv.textContent = "Error de conexión con la base de datos.";
+        errorDiv.textContent = "Error de comunicación con Supabase.";
         errorDiv.style.display = 'block';
       }
     }
 
-    // Mantener la sesión abierta si recargan la página
+    // Persistencia de la sesión al recargar
     window.onload = function() {
       if (sessionStorage.getItem('sesion_docente') === 'activa') {
         document.getElementById('bloqueo').style.display = 'none';
       }
     }
 
-    // CONFIGURACIÓN DE DOCSIFY
+    // CONFIGURACIÓN INTERNA DE DOCSIFY
     window.$docsify = {
       name: 'IES Drago',
       logo: 'logo.png',
@@ -90,7 +91,7 @@
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 
   <style>
-    /* Bloqueo: Azul Marino Intenso de Fondo completo */
+    /* Bloqueo: Fondo Azul Marino Oscuro */
     #bloqueo {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -106,14 +107,13 @@
       background-color: #ffffff !important;
       padding: 40px 35px;
       border-radius: 16px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
       width: 90%;
       max-width: 380px;
       text-align: center;
       box-sizing: border-box;
     }
 
-    /* Logo dentro de la caja flotante */
     .login-box-container .login-logo {
       max-width: 130px;
       height: auto;
@@ -125,7 +125,7 @@
       color: #1E293B !important;
       margin-bottom: 8px;
       font-size: 22px;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: system-ui, sans-serif;
     }
 
     .login-box-container p {
@@ -155,19 +155,18 @@
       font-weight: bold;
       font-size: 15px;
       cursor: pointer;
-      transition: background 0.2s ease;
     }
 
     .login-box-container button:hover {
       background-color: #2563EB !important;
     }
 
-    /* DISEÑO INTERIOR INTRANET: FONDO AZUL CLARITO */
+    /* DISEÑO INTERIOR DE LA WEB: FONDO AZUL CLARITO */
     body, .content, article {
       background-color: #EBF3FC !important; 
     }
 
-    /* COLUMNA LATERAL EN BLANCO */
+    /* COLUMNA LATERAL EN BLANCO ENVIDIABLE */
     .sidebar {
       background-color: #FFFFFF !important;
       border-right: 1px solid #E2E8F0;
@@ -186,12 +185,10 @@
       border-left: 4px solid #4A90E2;
     }
 
-    /* Soporte visual estético para Subcarpetas */
     .sidebar ul li ul {
       padding-left: 15px !important;
     }
 
-    /* Diseños elásticos para marcos y calendarios en móviles */
     .contenedor-calendario-adaptable {
       position: relative;
       overflow: hidden;
