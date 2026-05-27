@@ -2,208 +2,210 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Intranet Profesorado</title>
+  <title>IES Drago</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
 </head>
 <body>
 
   <div id="bloqueo">
-  <div class="login-box-container">
-    <img src="logo.png" class="login-logo" alt="IES Drago">
-    <h2>Intranet IES Drago</h2>
-    <p>Inicia sesión con tu usuario de Educaand</p>
-    <input type="text" id="userInput" placeholder="Usuario">
-    <input type="password" id="passInput" placeholder="Contraseña">
-    <button onclick="iniciarSesion()">Acceder</button>
-    <div id="error" style="color:red; display:none; margin-top:10px;"></div>
+    <div class="login-box-container">
+      <img src="logo.png" class="login-logo" alt="IES Drago">
+      <h2>Intranet IES Drago</h2>
+      <p>Inicia sesión con tu usuario de Educaand</p>
+      
+      <input type="text" id="userInput" placeholder="Usuario de Séneca">
+      <input type="password" id="passInput" placeholder="Contraseña">
+      
+      <button onclick="iniciarSesion()">Acceder</button>
+      <div id="error" style="color: red; display: none; margin-top: 15px; font-weight: bold;"></div>
+    </div>
   </div>
-</div>
 
-  <div id="app">Cargando intranet...</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // --- PEGA AQUÍ TUS DATOS DE SUPABASE DEL PASO 1 ---
-    const SUPABASE_URL = "https://ailzwulxwbzckqobwkxa.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_43E5b_XAdcJqG8PjEGfklQ_lDNFBiqN";
-    // --------------------------------------------------
+    // --- DATOS DE CONEXIÓN A SUPABASE ---
+    const SUPABASE_URL = "https://ailzculxwbzckqobwlxa.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_43E5b_XAdcJqG8PjEGfklQ_lDNFBiqN"; // Tu clave larga real
+    
+    // Inicialización limpia reutilizando la librería global
+    const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+    // FUNCIÓN DE INICIO DE SESIÓN
     async function iniciarSesion() {
       let usuario = document.getElementById('userInput').value.trim();
       const contrasena = document.getElementById('passInput').value;
       const errorDiv = document.getElementById('error');
 
+      if (!usuario || !contrasena) {
+        errorDiv.textContent = "Por favor, rellena todos los campos.";
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      // Añadimos el sufijo automáticamente si el profesor pone solo el usuario corto
       if (usuario.includes('@')) {
         usuario = usuario.split('@')[0];
       }
       usuario = usuario + "@g.educaand.es";
 
-      // Intentamos loguear al usuario contra tu lista de Supabase
-      const { data, error } = await miSupabase.auth.signInWithPassword({
-        email: usuario,
-        password: contrasena,
-      });
+      try {
+        const { data, error } = await miSupabase.auth.signInWithPassword({
+          email: usuario,
+          password: contrasena,
+        });
 
-      if (error) {
-        errorDiv.textContent = "Acceso denegado: Usuario no válido o no autorizado.";
+        if (error) {
+          errorDiv.textContent = "Acceso denegado: Usuario o contraseña incorrectos.";
+          errorDiv.style.display = 'block';
+        } else {
+          // Éxito: Ocultamos el bloqueo y damos paso libre
+          sessionStorage.setItem('sesion_docente', 'activa');
+          document.getElementById('bloqueo').style.display = 'none';
+        }
+      } catch (err) {
+        errorDiv.textContent = "Error de conexión con la base de datos.";
         errorDiv.style.display = 'block';
-      } else {
-        // Logueado con éxito
-        sessionStorage.setItem('sesion_docente', 'activa');
+      }
+    }
+
+    // Mantener la sesión abierta si recargan la página
+    window.onload = function() {
+      if (sessionStorage.getItem('sesion_docente') === 'activa') {
         document.getElementById('bloqueo').style.display = 'none';
       }
     }
 
-    <script>
-  window.$docsify = {
-    name: 'IES Drago',
-    logo: 'logo.png', 
-    themeColor: '#4A90E2', 
-    loadSidebar: true,
-    auto2top: true
-  };
-</script>
+    // CONFIGURACIÓN DE DOCSIFY
+    window.$docsify = {
+      name: 'IES Drago',
+      logo: 'logo.png',
+      themeColor: '#4A90E2',
+      loadSidebar: true,
+      auto2top: true
+    };
+  </script>
 
-<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 
-<style>
-  /* 1. PANTALLA DE BLOQUEO (FONDO AZUL MARINO Y CUADRO FLOTANTE BLANCO) */
-  #bloqueo {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #0B192C !important; /* Azul Marino Oscuro */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-  }
+  <style>
+    /* Bloqueo: Azul Marino Intenso de Fondo completo */
+    #bloqueo {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: #0F172A !important; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
 
-  /* Cuadro flotante blanco centrado */
-  .login-box-container {
-    background-color: #ffffff !important;
-    padding: 40px 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 380px;
-    text-align: center;
-    box-sizing: border-box;
-  }
+    /* Caja Flotante Blanca */
+    .login-box-container {
+      background-color: #ffffff !important;
+      padding: 40px 35px;
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      box-sizing: border-box;
+    }
 
-  /* Logo insertado dentro del cuadro de login */
-  .login-box-container img.login-logo {
-    max-width: 120px;
-    height: auto;
-    margin-bottom: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
+    /* Logo dentro de la caja flotante */
+    .login-box-container .login-logo {
+      max-width: 130px;
+      height: auto;
+      margin: 0 auto 20px auto;
+      display: block;
+    }
 
-  .login-box-container h2 {
-    color: #0B192C !important;
-    font-family: 'Segoe UI', sans-serif;
-    margin-bottom: 10px;
-    font-size: 24px;
-  }
+    .login-box-container h2 {
+      color: #1E293B !important;
+      margin-bottom: 8px;
+      font-size: 22px;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
 
-  .login-box-container p {
-    color: #64748b !important;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
+    .login-box-container p {
+      color: #64748B !important;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
 
-  /* Inputs estilizados */
-  .login-box-container input[type="text"],
-  .login-box-container input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    box-sizing: border-box;
-    font-size: 14px;
-  }
+    .login-box-container input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
+      background-color: #F8FAFC;
+    }
 
-  .login-box-container button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4A90E2 !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s;
-  }
+    .login-box-container button {
+      width: 100%;
+      padding: 13px;
+      background-color: #4A90E2 !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
 
-  .login-box-container button:hover {
-    background-color: #357ABD !important;
-  }
+    .login-box-container button:hover {
+      background-color: #2563EB !important;
+    }
 
-  /* 2. INTERIOR DE LA INTRANET (FONDO AZUL CLARITO Y COLUMNA BLANCA) */
-  /* Fondo general de la página en azul clarito */
-  body, .content, article {
-    background-color: #EBF3FC !important; /* Azul clarito de fondo */
-  }
+    /* DISEÑO INTERIOR INTRANET: FONDO AZUL CLARITO */
+    body, .content, article {
+      background-color: #EBF3FC !important; 
+    }
 
-  /* Columna del menú lateral en Blanco */
-  .sidebar {
-    background-color: #ffffff !important; 
-    border-right: 1px solid #cbd5e1;
-  }
+    /* COLUMNA LATERAL EN BLANCO */
+    .sidebar {
+      background-color: #FFFFFF !important;
+      border-right: 1px solid #E2E8F0;
+    }
 
-  /* Enlaces del menú lateral */
-  .sidebar ul li a {
-    color: #334155 !important;
-    font-size: 14px;
-  }
+    .sidebar ul li a {
+      color: #334155 !important;
+      font-size: 14px;
+    }
 
-  .sidebar ul li.active > a, 
-  .sidebar ul li a:hover {
-    color: #4A90E2 !important; 
-    font-weight: bold;
-    background-color: #f1f5f9;
-    border-left: 4px solid #4A90E2;
-  }
+    .sidebar ul li.active > a, 
+    .sidebar ul li a:hover {
+      color: #4A90E2 !important;
+      font-weight: bold;
+      background-color: #F1F5F9;
+      border-left: 4px solid #4A90E2;
+    }
 
-  /* Subcarpetas / Submenús en cascada */
-  .sidebar ul li ul {
-    padding-left: 15px !important;
-  }
+    /* Soporte visual estético para Subcarpetas */
+    .sidebar ul li ul {
+      padding-left: 15px !important;
+    }
 
-  /* Botón para ocultar/mostrar menú (Docsify lo maneja solo, lo pintamos) */
-  .sidebar-toggle {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    border-radius: 4px;
-    padding: 10px !important;
-  }
+    /* Diseños elásticos para marcos y calendarios en móviles */
+    .contenedor-calendario-adaptable {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding-top: 80%; 
+      background: white;
+      border-radius: 8px;
+    }
+    .contenedor-calendario-adaptable iframe {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      border: none;
+    }
+  </style>
 
-  /* 3. RESPONSIVE: RESPONSIVIDAD PARA EL CALENDARIO NO-GOOGLE */
-  .contenedor-calendario-adaptable {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    padding-top: 75%; /* Relación de aspecto para que no se corte en móviles */
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  }
-
-  .contenedor-calendario-adaptable iframe {
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
-    width: 100%; height: 100%;
-    border: none;
-  }
-</style>
-</body>
-</html>
 </body>
 </html>
