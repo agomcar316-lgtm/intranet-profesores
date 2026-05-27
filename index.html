@@ -27,10 +27,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // --- DATOS DE CONEXIÓN A SUPABASE ---
+    // --- DATOS DE CONEXIÓN A SUPABASE (URL LIMPIA SIN AÑADIDOS) ---
     const SUPABASE_URL = "https://ailzculxwbzckqobwlxa.supabase.co";
-    // Usamos tu clave pública real "anon public" para que la conexión responda
-    const SUPABASE_KEY = "sb_publishable_GO_oH1MciSTQNL8llaUpbA_mu29fjKR"; 
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpbHpjdWx4d2J6Y2tvYndseGEiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0ODMxODEyNSwiZXhwIjoyMDYzODk0MTI1fQ.v_bC-x91K0H0fS7Nf3XpEdf1uC169L_L9_z3gXvW-9k"; 
     
     // Inicialización del cliente
     const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -66,7 +65,7 @@
           document.getElementById('bloqueo').style.display = 'none';
         }
       } catch (err) {
-        errorDiv.textContent = "Error de comunicación con Supabase.";
+        errorDiv.textContent = "Error de comunicación con la base de datos.";
         errorDiv.style.display = 'block';
       }
     }
@@ -78,13 +77,14 @@
       }
     }
 
-    // CONFIGURACIÓN INTERNA DE DOCSIFY
+    // CONFIGURACIÓN AJUSTADA PARA GITHUB PAGES (Ruta relativa)
     window.$docsify = {
       name: 'IES Drago',
       logo: 'logo.png',
       themeColor: '#4A90E2',
       loadSidebar: true,
-      auto2top: true
+      auto2top: true,
+      relativePath: true // ¡Clave para que encuentre el _sidebar.md en GitHub Pages!
     };
   </script>
 
@@ -166,7 +166,7 @@
       background-color: #EBF3FC !important; 
     }
 
-    /* COLUMNA LATERAL EN BLANCO ENVIDIABLE */
+    /* COLUMNA LATERAL EN BLANCO */
     .sidebar {
       background-color: #FFFFFF !important;
       border-right: 1px solid #E2E8F0;
