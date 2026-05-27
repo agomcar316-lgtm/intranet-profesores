@@ -54,7 +54,7 @@
     const SUPABASE_KEY = "sb_publishable_43E5b_XAdcJqG8PjEGfklQ_lDNFBiqN";
     // --------------------------------------------------
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function iniciarSesion() {
       let usuario = document.getElementById('userInput').value.trim();
@@ -67,7 +67,7 @@
       usuario = usuario + "@g.educaand.es";
 
       // Intentamos loguear al usuario contra tu lista de Supabase
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await miSupabase.auth.signInWithPassword({
         email: usuario,
         password: contrasena,
       });
