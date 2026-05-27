@@ -54,17 +54,17 @@
     const SUPABASE_KEY = "sb_publishable_43E5b_XAdcJqG8PjEGfklQ_lDNFBiqN";
     // --------------------------------------------------
 
-    const supabase = SUPABASE.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function iniciarSesion() {
       let usuario = document.getElementById('userInput').value.trim();
       const contrasena = document.getElementById('passInput').value;
       const errorDiv = document.getElementById('error');
 
-      // Si el profesor no escribe el correo completo, se lo añadimos nosotros automáticamente
-      if (!usuario.includes('@')) {
-        usuario = usuario + "@g.educaand.es"; 
+      if (usuario.includes('@')) {
+        usuario = usuario.split('@')[0];
       }
+      usuario = usuario + "@g.educaand.es";
 
       // Intentamos loguear al usuario contra tu lista de Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
